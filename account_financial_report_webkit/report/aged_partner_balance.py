@@ -43,6 +43,7 @@ def make_ranges(top, offset):
     ranges.append((top, 100000000000))
     return ranges
 
+
 # list of overdue ranges
 RANGES = make_ranges(120, 30)
 
@@ -53,6 +54,7 @@ def make_ranges_titles():
     titles += [_(u'Age ≤ %s d.') % x[1] for x in RANGES[1:-1]]
     titles.append(_('Older'))
     return titles
+
 
 # list of overdue ranges title
 RANGES_TITLES = make_ranges_titles()
@@ -79,9 +81,12 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
 
         header_report_name = ' - '.join((_('Aged Partner Balance'),
                                          company.currency_id.name))
+        header_report_name = header_report_name.encode('utf8')
 
         footer_date_time = self.formatLang(str(datetime.today()),
                                            date_time=True)
+        fotter_page = ' '.join((_('Page'), '[page]', _('of'), '[topage]'))
+        fotter_page = fotter_page.encode('utf8')
 
         self.localcontext.update({
             'cr': cursor,
@@ -98,8 +103,7 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
                 ('--header-left', header_report_name),
                 ('--header-spacing', '2'),
                 ('--footer-left', footer_date_time),
-                ('--footer-right',
-                 ' '.join((_('Page'), '[page]', _('of'), '[topage]'))),
+                ('--footer-right', fotter_page),
                 ('--footer-line',),
             ],
         })
@@ -443,6 +447,7 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
         self.cr.execute(sql, (l_ids,))
         res = self.cr.fetchall()
         return dict((x[0], x[1]) for x in res)
+
 
 HeaderFooterTextWebKitParser(
     'report.account.account_aged_trial_balance_webkit',
