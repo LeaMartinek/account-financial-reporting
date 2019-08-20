@@ -296,6 +296,7 @@ class open_invoices_xls(report_xls):
         if line.get('invoice_number'):
             label_elements.append("(%s)" % (line['invoice_number'],))
         label = ' '.join(label_elements)
+        label = line.get('lref') or ''
 
         # Mako: <div class="act_as_row lines
         # ${line.get('is_from_previous_periods') and
